@@ -3,11 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { MessageService } from './messages.service.js';
+import { TransformResponseInterceptor } from '../TransformResponse.interceptor.js';
 
 export interface MessageDto {
   messageId: number;
@@ -15,6 +18,7 @@ export interface MessageDto {
   dateOfBirth: string;
 }
 
+@UseInterceptors(TransformResponseInterceptor)
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messageService: MessageService) {}
@@ -26,7 +30,11 @@ export class MessagesController {
 
   @Get(':id')
   getMessageById(@Param('id') id: number): unknown {
-    return this.messageService.findByMessageId(id);
+    const message = this.messageService.findByMessageId(id);
+    if (message.length == 0) {
+      throw new NotFoundException('Message not found');
+    }
+    return message;
   }
 
   @Post()

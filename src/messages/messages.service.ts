@@ -23,8 +23,8 @@ export class MessageService {
   }
 
   findByMessageId(messageId: number) {
-    this.loggerService.logMessage('Fetching employee by id');
-    return this.employees.find((emp) => emp.messageId == messageId) || [];
+    this.loggerService.logMessage(`Fetching employee by id - ${messageId}`);
+    return this.employees.filter((emp) => emp.messageId == messageId) || [];
   }
 
   createMessageById(createUserDto: MessageDto) {
@@ -44,7 +44,7 @@ export class MessageService {
   }
 
   deleteMessageById(messageId: number) {
-    this.loggerService.logMessage('Deleting employee by id');
+    this.loggerService.logMessage('Creating employee by id');
     const index = this.employees.findIndex((ele) => ele.messageId == messageId);
     if (index !== -1) {
       this.employees.splice(index, 1);
